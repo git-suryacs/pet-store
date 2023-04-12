@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Pet
-from .serializers import ItemSerializer
+from .models import Basetable,Category,Tags
+from .serializers import BasetableSerializer,CategorySerializer,TagsSerializer
 from rest_framework import serializers
 from rest_framework import status
 from django.shortcuts import get_object_or_404
@@ -47,32 +47,32 @@ def pets(request):
         return Response(serializer.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    
-@api_view(['GET'])
-def view_pet(request,pet_id):
-
-    if pet_id:
-        item = get_object_or_404(Pet,pk=pet_id)
-    # else:
-    #     items = Item.objects.all()
-
-    if item:
-        serializer = ItemSerializer(item,many=False)
-        return Response(serializer.data)
-
-@api_view(['POST'])
-def update_items(request,pk):
-    item = Pet.objects.get(pk=pk)
-    data = ItemSerializer(instance=item,data=request.data)
-
-    if data.is_valid():
-        data.save()
-        return Response(data.data)
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-@api_view(['DELETE'])
-def delete_items(request,pk):
-    item = get_object_or_404(Pet,pk=pk)
-    item.delete()
-    return Response(status=status.HTTP_202_ACCEPTED)
+#
+# @api_view(['GET'])
+# def view_pet(request,pet_id):
+#
+#     if pet_id:
+#         item = get_object_or_404(Pet,pk=pet_id)
+#     else:
+#         items = Pet.objects.all()
+#
+#     if item:
+#         serializer = ItemSerializer(item,many=False)
+#         return Response(serializer.data)
+#
+# @api_view(['POST'])
+# def update_items(request,pk):
+#     item = Pet.objects.get(pk=pk)
+#     data = ItemSerializer(instance=item,data=request.data)
+#
+#     if data.is_valid():
+#         data.save()
+#         return Response(data.data)
+#     else:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+#
+# @api_view(['DELETE'])
+# def delete_items(request,pk):
+#     item = get_object_or_404(Pet,pk=pk)
+#     item.delete()
+#     return Response(status=status.HTTP_202_ACCEPTED)
