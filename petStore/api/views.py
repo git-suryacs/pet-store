@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Item
+from .models import Pet
 from .serializers import ItemSerializer
 from rest_framework import serializers
 from rest_framework import status
@@ -10,12 +10,13 @@ from django.shortcuts import get_object_or_404
 @api_view(['GET'])
 def ApiOverview(request):
     api_urls = {
-        'all_items': '/',
-        'search by Category': '/?category=category_name',
-        'search by Subcategory': '/?subcategory=category_name',
-        'Add': '/create',
-        'Update': '/update/pk',
-        'Delete': '/item/pk/delete'
+        'Find pet by ID': '/pet/{petId}',
+        'Updates a pet in the store with form data': '/pet/{petId}',
+        'Deletes a pet': '/pet/{petId}',
+        'Uploads an Image': '/pet/{petId}/uploadImage',
+        'Add a new pet to the store': '/pet',
+        'Update an existing pet': '/pet',
+        'Finds pets by status': '/pet/findByStatus'
     }
     return Response(api_urls)
 
@@ -24,7 +25,7 @@ def ApiOverview(request):
 def add_items(request):
     item = ItemSerializer(data = request.data)
 
-    if Item.objects.filter(**request.data).exists():
+    if Pet.objects.filter(**request.data).exists():
         raise serializers.ValidationError('This data already exists')
     if item.is_valid():
         item.save()
@@ -36,9 +37,9 @@ def add_items(request):
 @api_view(['GET'])
 def pets(request):
     if request.query_params:
-        items = Item.objects.filter(**request.query_params.dict())
+        items = Pet.objects.filter(**request.query_params.dict())
     else:
-        items = Item.objects.all()
+        items = Pet.objects.all()
 
         # if there is something in items else raise error
     if items:
@@ -51,7 +52,7 @@ def pets(request):
 def view_pet(request,pet_id):
 
     if pet_id:
-        item = get_object_or_404(Item,pk=pet_id)
+        item = get_object_or_404(Pet,pk=pet_id)
     # else:
     #     items = Item.objects.all()
 
@@ -61,7 +62,7 @@ def view_pet(request,pet_id):
 
 @api_view(['POST'])
 def update_items(request,pk):
-    item = Item.objects.get(pk=pk)
+    item = Pet.objects.get(pk=pk)
     data = ItemSerializer(instance=item,data=request.data)
 
     if data.is_valid():
@@ -72,6 +73,6 @@ def update_items(request,pk):
 
 @api_view(['DELETE'])
 def delete_items(request,pk):
-    item = get_object_or_404(Item,pk=pk)
+    item = get_object_or_404(Pet,pk=pk)
     item.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
