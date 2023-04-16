@@ -23,15 +23,28 @@ def ApiOverview(request):
 
 @api_view(['POST'])
 def add_items(request):
-    item = ItemSerializer(data = request.data)
-
-    if Pet.objects.filter(**request.data).exists():
-        raise serializers.ValidationError('This data already exists')
-    if item.is_valid():
-        item.save()
-        return Response(item.data)
+    basetableserializer = BasetableSerializer(data = request.data)
+    categoryserializer = CategorySerializer(data = request.data)
+    tagsserializer = TagsSerializer(data = request.data)
+    print(basetableserializer)
+    print(categoryserializer)
+    print(tagsserializer)
+    if basetableserializer.is_valid() and categoryserializer.is_valid() and tagsserializer.is_valid():
+        basetableserializer.save()
+        categoryserializer.save()
+        tagsserializer.save()
+        return Response(basetableserializer.data)
     else:
+        print("else statement executed")
         return Response(status = status.HTTP_404_NOT_FOUND)
+
+    # if basetable.objects.filter(**request.data).exists():
+    #     raise serializers.ValidationError('This data already exists')
+    # if item.is_valid():
+    #     item.save()
+    #     return Response(item.data)
+    # else:
+    #     return Response(status = status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])

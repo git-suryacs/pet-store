@@ -11,15 +11,15 @@ class Basetable(models.Model):
 
 class Category(models.Model):
     category_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-    id = models.CharField(max_length=100)
+    c_name = models.CharField(max_length=100)
+    c_id = models.CharField(max_length=100)
     basetable_id = models.OneToOneField(Basetable, on_delete=models.CASCADE)
 
 
 class Tags(models.Model):
     tags_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-    id = models.CharField(max_length=100)
+    t_name = models.CharField(max_length=100)
+    t_id = models.CharField(max_length=100)
     basetable_id = models.ForeignKey(Basetable, on_delete=models.CASCADE)
 # from django.db import models
 #
